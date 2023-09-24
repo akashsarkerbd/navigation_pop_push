@@ -1,74 +1,98 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super. key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
-      home: HomeActivity(),
+      debugShowCheckedModeBanner: false,
+      home: CounterScreen(),
     );
   }
 }
 
-class HomeActivity extends StatelessWidget {
+class CounterScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Home'),
-      ),
-     body: Center(
-       child: Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: [
-           Text('Akash',
-           style: TextStyle( fontSize: 14,
-           fontWeight:FontWeight.normal),),
-           Divider(
-           ),
-           ElevatedButton(onPressed: (){
-             Navigator.push(context, MaterialPageRoute(builder: (context) =>SettingActivity()));
-           },
+  _CounterScreenState createState() => _CounterScreenState();
+}
 
-               child: Icon(Icons.settings,size: 15))
+class _CounterScreenState extends State<CounterScreen> {
+  int count = 0;
 
-         ],
-       ),
-     ),
+  void _incrementCount() {
+    setState(() {
+      count++;
+      if (count >= 5) {
+        _showDialog();
+      }
+    });
+  }
+
+  void _decrementCount() {
+    setState(() {
+      if (count > 0) {
+        count--;
+      }
+    });
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Button pressed $count times.'),
+          actions:[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
-}
-class SettingActivity extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('settings'),
+        title: Text('Counter App'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Sarkar',
-              style: TextStyle( fontSize: 14,
-                  fontWeight:FontWeight.normal),),
-            Divider(
+          children:[
+            Text(
+              'Count',
+              style: TextStyle(fontSize: 24),
             ),
-            ElevatedButton(onPressed: (){
-              Navigator.pop(context, MaterialPageRoute(builder: (context) =>HomeActivity()));
-
-            },
-
-                child: Icon(Icons.backspace_outlined,size: 15))
-
+            Text(
+              '$count',
+              style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _incrementCount,
+                  child: Text('+',style:TextStyle(fontSize:30,
+                  fontWeight: FontWeight.bold),),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: _decrementCount,
+                  child: Text('-',style:TextStyle(fontSize:30,
+                      fontWeight: FontWeight.bold),),
+                ),
+              ],
+            ),
           ],
         ),
       ),
